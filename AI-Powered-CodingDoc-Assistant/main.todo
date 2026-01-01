@@ -1,0 +1,7 @@
+LLM:
+☐ Raw Text
+☐ Clean
+☐ Chunk (optional)
+☐ Retrieve relevant parts
+☐ Prompt LLM
+☐ Post-process answer
