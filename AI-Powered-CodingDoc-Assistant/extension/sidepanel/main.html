@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/sidepanel.css">
+    <title>Coding Doc AI Assist</title>
+    
+</head>
+<body>
+    <h1 class="extension-title">Welcome, How Can I Clarify?</h1>
+    <p class="extension-subtitle">Context specific documentation clarification</p>
+    <form id="submission-form"">
+        <div class="context-div">
+            <label class="usecase-context-label">Enter project context:</label>
+            <input name="usecase-context" class="usecase-context" type="text" placeholder="Building a personal website...">
+        </div>    
+        <div class="selected_doc-div">
+            <label class="selected-doc-label">Enter point of confusion:</label>
+            <input name="selected-doc" class="selected-doc" type="text" placeholder="Building a personal website...">
+        </div>   
+        <button class="explain-btn" type="submit">Explain</button>
+    </form>
+    <script src="../scripts/main.js"></script>
+</body>
+</html>

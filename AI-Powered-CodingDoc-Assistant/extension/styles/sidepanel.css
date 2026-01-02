@@ -1,0 +1,91 @@
+/*|| BODY ||*/
+
+body {
+    align-items: center;
+    justify-content: center;
+    background-color: #222;
+}
+
+.extension-title {
+    font-size: 21px;
+    font-weight: 400;
+    color: white;
+}
+
+.extension-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 50px;
+}
+
+/*|| CONTEXT ||*/
+
+.context-div {
+    justify-content: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.usecase-context-label {
+    font-size: 16px;
+    font-weight: 400;
+    color: white;   
+    margin-bottom: 15px;
+}
+
+.usecase-context {
+    display: block;           
+    padding: 10px;
+    line-height: 1.4;
+    vertical-align: top;
+    resize: none;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #222;
+    color: white;
+    font-weight: 400;
+    border-radius: 10px;
+    border-color: white;
+    box-shadow: 1px 1px 10px rgba(255, 0, 0, 0.281);
+}
+
+/*|| SELECTED DOC ||*/
+
+.selected-doc-div {
+    justify-content: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.selected-doc-label {
+    font-size: 16px;
+    font-weight: 400;
+    color: white;   
+    margin-bottom: 15px;
+}
+
+.selected-doc {
+    display: block;           
+    padding: 10px;
+    line-height: 1.4;
+    vertical-align: top;
+    resize: none;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #222;
+    color: white;
+    font-weight: 400;
+    border-radius: 10px;
+    border-color: white;
+    box-shadow: 1px 1px 10px rgba(255, 0, 0, 0.281);
+}
+
+.explain-btn {
+    height: 35px;
+    width: 25%;
+    background-color: #222;
+    color: white;
+    font-size: 15px;
+    box-shadow: 1px 1px 10px rgba(255, 0, 0, 0.281);
+}
