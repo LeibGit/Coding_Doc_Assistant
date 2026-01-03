@@ -1,19 +1,28 @@
-const ENPOINT = "http://127.0.0.1:8000"
+const ENDPOINT = "http://localhost:8000";
 
 export async function send_llm_req(formData) {
+    console.log("send_llm_req called with:", formData); // ADD THIS
+    
     try {
-        const res = await fetch(`${ENPOINT}/get_llm`, {
+        const res = await fetch(`${ENDPOINT}/get_llm`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(formData)
         });
+        
+        console.log("Response status:", res.status); // ADD THIS
+        
         if (!res.ok) {
-            throw new Error("Error sending request.")
-        } else {
-            const data = await res.json()
-            return data;
-        } 
+            const errorText = await res.text(); // ADD THIS
+            console.error("Error response:", errorText); // ADD THIS
+            throw new Error(`Error sending request: ${res.status} - ${errorText}`)
+        }
+        
+        const data = await res.json()
+        console.log("Parsed response data:", data); // ADD THIS
+        return data.result;
     } catch (err) {
-        console.error(err)
+        console.error("Fetch error:", err)
+        throw err; // RE-THROW so background.js catches it
     }
 }

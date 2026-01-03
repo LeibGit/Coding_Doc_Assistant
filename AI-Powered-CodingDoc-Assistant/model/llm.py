@@ -1,28 +1,55 @@
-from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
+from huggingface_hub import InferenceClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Llm_Model:
-    def __init__(self, usecase_context, selected_documentation):
-        self.usecase_context = usecase_context
-        self.selected_documentation = selected_documentation
-        self.model_name = "stabilityai/stable-code-instruct-3b"  # ✅ valid, free HF model
+    def __init__(self, hf_token=os.getenv("HF_TOKEN")):
+        self.model_name = "HuggingFaceH4/zephyr-7b-beta"
 
-    def generate_res(self, max_tokens=300):
+        token = hf_token or os.getenv("HF_TOKEN")
+        if not token:
+            raise RuntimeError("HF_TOKEN not set")
 
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        model = AutoModelForCausalLM.from_pretrained(self.model_name)
-
-        generator = pipeline(
-            "text-generation",
+        self.client = InferenceClient(
             model=self.model_name,
-            tokenizer=self.model_name,
+            token=token,
         )
 
-        prompt = f"""
-You are an expert developer assistant.
-User project context: {self.usecase_context}
-Documentation: {self.selected_documentation}
-Provide a clear, practical answer tailored to the user's project. Include any code snippets if necessary.
-"""
+        print(f"Initialized HF InferenceClient for {self.model_name}")
 
-        result = generator(prompt, max_new_tokens=max_tokens)
-        return result[0]['generated_text']
+    def generate(
+        self,
+        usecase_context: str,
+        selected_documentation: str,
+        max_tokens: int = 300,
+    ) -> str:
+
+        messages = [
+            {
+                "role": "system",
+                "content": "You are an expert developer assistant."
+            },
+            {
+                "role": "user",
+                "content": f"""
+User project context:
+{usecase_context}
+
+Documentation:
+{selected_documentation}
+
+Explain how to integrate this into the user's project.
+Be practical. Use examples if helpful.
+"""
+            }
+        ]
+
+        response = self.client.chat.completions.create(
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=0.7,
+        )
+
+        return response.choices[0].message.content
