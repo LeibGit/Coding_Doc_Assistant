@@ -15,7 +15,19 @@ sub_form.addEventListener('submit', (e) => {
     const responseContainer = document.getElementById('response-container');
     loadingIndicator.style.display = 'block';
     responseContainer.style.display = 'none';
-    
+
+    // Add disclosure message
+    let disclosure = document.getElementById('disclosure-message');
+    if (!disclosure) {
+        disclosure = document.createElement('p');
+        disclosure.id = 'disclosure-message'; // for future reuse
+        disclosure.innerHTML = "<strong>Disclosure: </strong>Expect a 1-minute response time, we are operating on free servers.";
+        disclosure.style.cssText = "margin-top: 10px; font-size: 0.9em; color: #999;";
+        loadingIndicator.parentNode.insertBefore(disclosure, loadingIndicator.nextSibling);
+    }
+    disclosure.style.display = 'block';
+
+
     chrome.runtime.sendMessage(
         { 
             type: "SEND_REQ",
