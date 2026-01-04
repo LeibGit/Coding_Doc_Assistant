@@ -1,8 +1,26 @@
 const sub_form = document.getElementById('submission-form');
 
-sub_form.addEventListener('submit', (e) => {
+let allPageText = ""
+
+async function sendTabContentToBackend(tabId) {
+  // Step 1: Get the text from the tab
+  const [result] = await chrome.scripting.executeScript({
+    target: {tabId: tabId},
+    func: () => document.body.innerText
+  });
+  
+  allPageText = result.result;
+}
+
+sub_form.addEventListener('submit', async (e) => {
     e.preventDefault()
     console.log("Form submitted");
+    
+    // Get the active tab's ID first and grab content
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+    await sendTabContentToBackend(tab.id);
+    
+    console.log("Page text:", allPageText); // Check if it's populated
     
     const formData = new FormData(sub_form)
     const usecaseContext = formData.get("usecase-context")
@@ -27,41 +45,57 @@ sub_form.addEventListener('submit', (e) => {
     }
     disclosure.style.display = 'block';
 
-
-    chrome.runtime.sendMessage(
-        { 
-            type: "SEND_REQ",
-            payload: {
-                "usecase_context": usecaseContext,
-                "selected_docs": selectedDoc
-            } 
-        },
-        function(response) {
-            console.log("Received response:", response);
-            
-            // Hide loading indicator
-            loadingIndicator.style.display = 'none';
-            
-            // Check if response exists
-            if (!response) {
-                console.error("No response received from background script");
-                showError("No response received. Check if the server is running and the background script is active.");
-                return;
-            }
-            
-            if (response.success && response.data) {
-                showResUI(response.data);
-            } else if (response.error) {
-                showError(response.error);
-            } else {
-                console.error("Unexpected response format:", response);
-                showError("Unexpected response from server");
-            }
+    console.log("Sending to backend:", allPageText)
+    
+    // Wrap chrome.runtime.sendMessage in a Promise for better error handling
+    try {
+        const response = await new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage(
+                { 
+                    type: "SEND_REQ",
+                    payload: {
+                        "usecase_context": usecaseContext,
+                        "selected_docs": selectedDoc,
+                        "page_context": allPageText
+                    } 
+                },
+                function(response) {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                    } else {
+                        resolve(response);
+                    }
+                }
+            );
+        });
+        
+        console.log("Received response:", response);
+        
+        // Hide loading indicator
+        loadingIndicator.style.display = 'none';
+        
+        if (response.success && response.data) {
+            showResUI(response.data);
+        } else if (response.error) {
+            showError(response.error);
+        } else {
+            console.error("Unexpected response format:", response);
+            showError("Unexpected response from server");
         }
-    )
+    } catch (error) {
+        console.error("Error sending message:", error);
+        loadingIndicator.style.display = 'none';
+        showError(error.message || "Failed to communicate with background script");
+    }
 })
 
 function showResUI(data) {
+    const reqDiv = document.getElementById("req-div");
+
+    if (reqDiv) {
+        reqDiv.style.display = "none";
+    }
+
     const responseContainer = document.getElementById('response-container');
     const disclosure = document.getElementById('disclosure-message');
     
@@ -79,7 +113,7 @@ function showResUI(data) {
     
     const resText = document.createElement("p");
     resText.textContent = data;
-    resText.style.cssText = "margin: 0; line-height: 1.6;";
+    resText.style.cssText = "margin: 0; line-height: 1.6; font-size: 16px";
     
     resDiv.appendChild(resText);
     responseContainer.appendChild(resDiv);
@@ -102,11 +136,12 @@ function showResUI(data) {
     
     requestAgainBtn.addEventListener('click', function() {
         // Hide response container and scroll to top
+        const reqDiv = document.getElementById("req-div")
         responseContainer.style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+        reqDiv.style.display = 'block';
         // Optional: Clear form fields
-        // sub_form.reset();
+        sub_form.reset();
     });
     
     responseContainer.appendChild(requestAgainBtn);

@@ -8,19 +8,21 @@
     
 </head>
 <body>
-    <h1 class="extension-title">Welcome, How Can I Clarify?</h1>
-    <p class="extension-subtitle">Context specific documentation clarification</p>
-    <form id="submission-form">
-        <div class="context-div">
-            <label class="usecase-context-label">Enter project context:</label>
-            <input name="usecase-context" class="usecase-context" type="text" placeholder="Building a personal website...">
-        </div>    
-        <div class="selected_doc-div">
-            <label class="selected-doc-label">Enter point of confusion:</label>
-            <input name="selected-doc" class="selected-doc" type="text" placeholder="Building a personal website...">
-        </div>   
-        <button class="explain-btn" type="submit">Explain</button>
-    </form>
+    <div id="req-div">
+        <h1 class="extension-title">Welcome, How Can I Clarify?</h1>
+        <p class="extension-subtitle">Context specific documentation clarification</p>
+        <form id="submission-form">
+            <div class="context-div">
+                <label class="usecase-context-label">Enter project context:</label>
+                <input name="usecase-context" class="usecase-context" type="text" placeholder="Your usecase here...">
+            </div>    
+            <div class="selected_doc-div">
+                <label class="selected-doc-label">Enter documentation question:</label>
+                <input name="selected-doc" class="selected-doc" type="text" placeholder="Your confusion here...">
+            </div>   
+            <button class="explain-btn" type="submit">Explain</button>
+        </form>
+    </div>
     <div id="response-container" style="display: none;"></div>
     <div id="loading-indicator" style="display: none; color: white; margin-top: 20px;">Loading...</div>
     <script src="../scripts/main.js"></script>

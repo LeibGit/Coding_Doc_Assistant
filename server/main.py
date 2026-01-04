@@ -12,7 +12,8 @@ llm_model = Llm_Model()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["chrome-extension://dmkhpkiohdphpcomnkcalmabcocggemj"],
+    # chrome-extension://dmkhpkiohdphpcomnkcalmabcocggemj
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,6 +22,7 @@ app.add_middleware(
 class Request(BaseModel):
     usecase_context: str
     selected_docs: str
+    page_context: str
 
 
 import asyncio
@@ -31,7 +33,8 @@ async def get_llm_res(request: Request):
         response = await asyncio.to_thread(
             llm_model.generate,
             request.usecase_context,
-            request.selected_docs
+            request.selected_docs,
+            request.page_context
         )
         return {"result": response}
     except Exception as e:

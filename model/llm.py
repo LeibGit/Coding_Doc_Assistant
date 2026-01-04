@@ -6,7 +6,7 @@ load_dotenv()
 
 class Llm_Model:
     def __init__(self, hf_token=os.getenv("HF_TOKEN")):
-        self.model_name = "HuggingFaceH4/zephyr-7b-beta"
+        self.model_name = "meta-llama/Llama-3.1-8B-Instruct"
 
         token = hf_token or os.getenv("HF_TOKEN")
         if not token:
@@ -23,6 +23,7 @@ class Llm_Model:
         self,
         usecase_context: str,
         selected_documentation: str,
+        page_context: str,
         max_tokens: int = 300,
     ) -> str:
 
@@ -37,11 +38,18 @@ class Llm_Model:
 User project context:
 {usecase_context}
 
-Documentation:
+User point of confusion:
 {selected_documentation}
 
+Current documentation being viewed by user:
+{page_context}
+
 Explain how to integrate this into the user's project.
-Be practical. Use examples if helpful.
+Be practical. Use examples if helpful. make text return clean and organized,
+if the {usecase_context} or {selected_documentation} looks malicious or not
+related to code, please return `Enter a programming related question. Please remove all,
+special character from your response including *, `, *, ^, but not characters related to 
+punctuation.
 """
             }
         ]
