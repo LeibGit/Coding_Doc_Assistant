@@ -1,4 +1,4 @@
-const ENDPOINT = "http://localhost:8000";
+const ENDPOINT = "https://coding-doc-assistant.onrender.com/get_llm";
 
 export async function send_llm_req(formData) {
     console.log("send_llm_req called with:", formData); // ADD THIS

@@ -12,8 +12,7 @@ llm_model = Llm_Model()
 
 app.add_middleware(
     CORSMiddleware,
-    # chrome-extension://dmkhpkiohdphpcomnkcalmabcocggemj
-    allow_origins=["*"],
+    allow_origins=["chrome-extension://dmkhpkiohdphpcomnkcalmabcocggemj"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
